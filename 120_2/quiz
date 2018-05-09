@@ -1,0 +1,50 @@
+https://launchschool.com/quizzes/6ec8c730
+1.
+no attr
+no increment of total cats
+no custom to_s
+
+2. ***************************************
+init that sets @name to name
+attr for grade / set directly to nil
+
+in the last snippet, even though there's an attr for grade, it's not initialized...
+calling `ade.grade` would return `nil` because it's an uninitialized ivar
+NOT because it's been set to `nil` **********************
+
+3.
+`name` and `name=` getter and setter for name attribute
+'grade' and 'grade=' getter and setter
+not sure what the 22 is...
+
+4. 
+calling `name` on a Knight object adds 'Sir ' to @name but does not set it
+ - either set @name
+ - or call name method from speak
+
+5. 
+override the Character#speak method
+
+6. *******************************
+call super from Lamb.new.speak
+subclass Cow from FarmAnimal
+NOTE `self` vs `self.class` -- just `self` returns the object encapsulation rep
+
+7. collaborator object is one that is assigned to an ivar in another object?
+
+*******************************
+8. ivar pointing to obj 
+... could argue that "Sara" and "Fluffy" are custom objects referenced by ivar
+so not sure...
+EXCEPT
+a string is a standard object that comes with the Ruby library
+
+9.
+Classes can't be used for namespacing...?
+
+10.
+supervise
+speak to customer
+
+11+.
+
