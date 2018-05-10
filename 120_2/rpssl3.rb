@@ -1,6 +1,7 @@
 # game play could be better, and computer.choose_move logic made more complex
 # can no doubt be better organized, but this is better than before...
-# biggest problem maybe passing game_data object as arg to computer.choose_move
+# is the `Game#initialize` too complex now?
+# are we still passing around more than needed?
 
 module Move
   WINNING_MOVES = {
@@ -48,6 +49,7 @@ class Game
     @human = Human.new
     @computer = the_droid_you_are_looking_for
     @game_data = GameData.new(human, computer)
+    @computer.assign_collaborators(@game_data, @human)
     @quit = false
   end
 
@@ -56,25 +58,10 @@ class Game
      UnbeatabLol.new, LittleTwist.new].sample
   end
 
-  # method flagged by RC for AbcSize... worth fixing?
-  # could break loop out into separate method...
   def play
     display_opponent
     clear_screen(1)
-
-    until game_won? || @quit
-      game_data.display_round_details
-      human.choose_move
-      human.display_move
-      computer.set_game_data(game_data)
-      computer.choose_move
-      computer.display_move
-      self.round_winner = determine_round_winner
-      display_round_winner(round_winner)
-      game_data.update(round_winner)
-      execute_player_option(display_options)
-    end
-
+    game_loop until game_won? || @quit
     display_overall_winner
     goodbye_message
   end
@@ -91,6 +78,21 @@ class Game
     sleep secs
     system('clear') || system('cls')
   end
+
+  # rubocop:disable Metrics/AbcSize
+  # it's 18.03/18 which I'm fine with...
+  def game_loop
+    game_data.display_round_details
+    human.choose_move
+    human.display_move
+    computer.choose_move
+    computer.display_move
+    self.round_winner = determine_round_winner
+    display_round_winner(round_winner)
+    game_data.update(round_winner)
+    execute_player_option(display_options)
+  end
+  # rubocop:enable Metrics/AbcSize
 
   def game_won?
     human.score == 10 || computer.score == 10
@@ -195,6 +197,7 @@ class Player
   def initialize
     set_name
     @score = 0
+    @move = nil
   end
 end
 
@@ -223,13 +226,14 @@ class Human < Player
 end
 
 class Computer < Player
-  attr_accessor :game_data
+  attr_accessor :game_data, :human
   def set_name
-    self.name = self.class.name # (could have defined ivars in subclasses)
+    self.name = self.class.name
   end
 
-  def set_game_data(game_data)
+  def assign_collaborators(game_data, human)
     @game_data = game_data
+    @human = human
   end
 
   def round
@@ -241,7 +245,7 @@ class Computer < Player
   end
 
   def human_move
-    game_data.human.move
+    human.move
   end
 end
 
