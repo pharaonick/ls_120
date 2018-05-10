@@ -2,6 +2,8 @@
 # can no doubt be better organized, but this is better than before...
 # is the `Game#initialize` too complex now?
 # are we still passing around more than needed?
+# wondering if we even need the `GameData` subclass...?
+# all that info might be easier kept in `Game`. Not sure. Anyway...
 
 module Move
   WINNING_MOVES = {
@@ -290,17 +292,11 @@ end
 
 class LittleTwist < Computer
   def choose_move
-    won_rounds = move_history.select do |hsh|
-      hsh[:winner] == name
+    winning_moves_to_add = move_history.each_with_object([]) do |data_hsh, arr|
+      arr << data_hsh[:computer] if data_hsh[:winner] == name
     end
 
-    winning_moves_to_add = []
-    won_rounds.each do |hsh|
-      winning_moves_to_add << hsh[:computer]
-    end
-
-    adjusted_choices = WINNING_MOVES.keys + winning_moves_to_add
-    self.move = adjusted_choices.sample
+    self.move = (WINNING_MOVES.keys + winning_moves_to_add).sample
   end
 end
 
