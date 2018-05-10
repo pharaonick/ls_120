@@ -223,7 +223,7 @@ end
 
 class Computer < Player
   def set_name
-    self.name = self.class.name
+    self.name = self.class.name # (could have defined ivars in subclasses)
   end
 end
 
