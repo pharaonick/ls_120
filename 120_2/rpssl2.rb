@@ -185,6 +185,11 @@ class GameData < Game
     self.round += 1
   end
 
+  # https://apidock.com/ruby/Object/send
+  def getMove(reference)
+    self.send(reference).move
+  end
+
   def getWinningMoves(name)
     winning_moves_to_add = history.collect do |hsh|
       if hsh[:winner] == name
@@ -272,9 +277,9 @@ end
 
 class UnbeatabLol < Computer
   def choose_move(game_data)
-    tie = game_data.human.move
+    tie = game_data.getMove(:human)
     winners = WINNING_MOVES.select do |_, losing_moves|
-      losing_moves.include?(game_data.human.move)
+      losing_moves.include?(tie)
     end
 
     self.move = ([tie] + winners.keys).sample
