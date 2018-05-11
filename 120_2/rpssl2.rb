@@ -188,6 +188,17 @@ class GameData < Game
   def getMove(object)
     object.send :move
   end
+
+  def getWinningMoves(name)
+    winning_moves_to_add = history.collect do |hsh|
+      if hsh[:winner] == name
+        return hsh[:computer]
+      else
+        next
+      end
+    end
+    winning_moves_to_add.compact
+  end
 end
 
 class Player
@@ -272,17 +283,7 @@ end
 
 class LittleTwist < Computer
   def choose_move(game_data)
-    won_rounds = game_data.history.select do |hsh|
-      hsh[:winner] == name
-    end
-
-    winning_moves_to_add = []
-    won_rounds.each do |hsh|
-      winning_moves_to_add << hsh[:computer]
-    end
-
-    adjusted_choices = WINNING_MOVES.keys + winning_moves_to_add
-    self.move = adjusted_choices.sample
+    self.move = (WINNING_MOVES.keys + game_data.getWinningMoves(name)).sample
   end
 end
 
