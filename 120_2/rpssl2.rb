@@ -184,6 +184,26 @@ class GameData < Game
   def increment_round
     self.round += 1
   end
+
+  # https://apidock.com/ruby/Object/send
+  def getMove(reference)
+    self.send(reference).move
+  end
+
+  def getWinningMoves(name)
+    winning_moves_to_add = history.collect do |hsh|
+      if hsh[:winner] == name
+        return hsh[:computer]
+      else
+        next
+      end
+    end
+    winning_moves_to_add.compact
+  end
+
+  def history_at(index)
+    history[index]
+  end
 end
 
 class Player
@@ -248,7 +268,7 @@ end
 class LooksBackInAnger < Computer
   def choose_move(game_data)
     if game_data.round > 1
-      self.move = game_data.history[game_data.round - 2][:human]
+      self.move = game_data.history_at(game_data.round - 2).human
     else
       super
     end
@@ -257,7 +277,7 @@ end
 
 class UnbeatabLol < Computer
   def choose_move(game_data)
-    tie = game_data.human.move
+    tie = game_data.getMove(:human)
     winners = WINNING_MOVES.select do |_, losing_moves|
       losing_moves.include?(game_data.human.move)
     end
@@ -268,17 +288,7 @@ end
 
 class LittleTwist < Computer
   def choose_move(game_data)
-    won_rounds = game_data.history.select do |hsh|
-      hsh[:winner] == name
-    end
-
-    winning_moves_to_add = []
-    won_rounds.each do |hsh|
-      winning_moves_to_add << hsh[:computer]
-    end
-
-    adjusted_choices = WINNING_MOVES.keys + winning_moves_to_add
-    self.move = adjusted_choices.sample
+    self.move = (WINNING_MOVES.keys + game_data.getWinningMoves(name)).sample
   end
 end
 
