@@ -185,10 +185,6 @@ class GameData < Game
     self.round += 1
   end
 
-  def getMove(object)
-    object.send :move
-  end
-
   def getWinningMoves(name)
     winning_moves_to_add = history.collect do |hsh|
       if hsh[:winner] == name
@@ -276,9 +272,9 @@ end
 
 class UnbeatabLol < Computer
   def choose_move(game_data)
-    tie = game_data.getMove(:human)
+    tie = game_data.human.move
     winners = WINNING_MOVES.select do |_, losing_moves|
-      losing_moves.include?(tie)
+      losing_moves.include?(game_data.human.move)
     end
 
     self.move = ([tie] + winners.keys).sample
