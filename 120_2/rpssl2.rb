@@ -199,6 +199,10 @@ class GameData < Game
     end
     winning_moves_to_add.compact
   end
+
+  def history_at(index)
+    history[index]
+  end
 end
 
 class Player
@@ -263,7 +267,7 @@ end
 class LooksBackInAnger < Computer
   def choose_move(game_data)
     if game_data.round > 1
-      self.move = game_data.history[game_data.round - 2][:human]
+      self.move = game_data.history_at(game_data.round - 2).human
     else
       super
     end
