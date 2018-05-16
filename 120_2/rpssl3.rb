@@ -4,6 +4,8 @@
 # are we still passing around more than needed?
 # wondering if we even need the `GameData` subclass...?
 # all that info might be easier kept in `Game`. Not sure. Anyway...
+# seems dodgy that computer would need human as a collaborator...
+# should be orchestration object that mediates behaviors between them (Chris's words!)
 
 module Move
   WINNING_MOVES = {
