@@ -104,10 +104,6 @@ class Square
   def marked?
     marker != INITIAL_MARKER
   end
-
-  def marked_by?(player_marker)
-    marker == player_marker
-  end
 end
 
 class Player
