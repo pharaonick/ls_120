@@ -74,10 +74,10 @@ class Deck
 
   def deal_initial_cards(punter, dealer)
     shuffle
-    punter.cards << peel_card
-    dealer.cards << peel_card
-    punter.cards << peel_card
-    dealer.cards << peel_card
+    2.times do 
+      punter.cards << peel_card
+      dealer.cards << peel_card
+    end
   end
 
   def peel_card
